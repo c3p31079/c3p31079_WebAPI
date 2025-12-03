@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>実物大計測</title>
+<title>AR計測トップ</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="container">
-    <video id="video" autoplay playsinline></video>
-    <canvas id="drawCanvas"></canvas>
-    <div id="measureText">0.0 cm</div>
-    <div id="ui-panel">
-        <button id="confirmBtn" class="button">確定</button>
-    </div>
+<div id="top-container">
+    <h1>AR 実物大計測</h1>
+    <button onclick="location.href='measure.html'" class="button">長さ計測開始</button>
+    <button onclick="location.href='history.html'" class="button">履歴を見る</button>
 </div>
-<script src="app.js"></script>
 </body>
 </html>

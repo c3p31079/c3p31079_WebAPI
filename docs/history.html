@@ -8,22 +8,30 @@
 </head>
 <body>
 <h2>計測履歴</h2>
-<div id="historyList"></div>
+<table id="historyTable">
+    <thead>
+        <tr>
+            <th>日付</th>
+            <th>長さ (cm)</th>
+            <th>線なし画像</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
 <script>
-async function loadHistory() {
-    const res = await fetch("http://localhost:5001/api/history");
-    const items = await res.json();
-    const container = document.getElementById("historyList");
-    container.innerHTML = "";
+function loadHistory(){
+    const items = JSON.parse(localStorage.getItem("measureHistory") || "[]");
+    const tbody = document.querySelector("#historyTable tbody");
+    tbody.innerHTML="";
     items.forEach(item=>{
-        const div = document.createElement("div");
-        div.innerHTML = `
-            <p>${item.time} - ${item.length_cm} cm</p>
-            <img src="http://localhost:5001/image/${item.image.split("/").pop()}" width="200">
-            <img src="http://localhost:5001/image/${item.overlay.split("/").pop()}" width="200">
-            <hr>
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${item.time}</td>
+            <td>${item.length_cm}</td>
+            <td><img src="${item.image}" width="150" onclick="window.open(this.src)"></td>
         `;
-        container.appendChild(div);
+        tbody.appendChild(tr);
     });
 }
 loadHistory();

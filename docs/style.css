@@ -1,43 +1,13 @@
-body {
-    font-family: "Segoe UI", sans-serif;
-    background: #111;
-    color: white;
-    margin: 0;
-}
-
-#container { position: relative; width: 100vw; height: 100vh; }
-
-#video { width: 100%; height: 100%; object-fit: cover; }
-
-#drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; touch-action: none; }
-
-#ui-panel { position: absolute; bottom: 15px; width: 100%; text-align: center; }
-
-.button {
-    padding: 12px 20px;
-    border-radius: 10px;
-    border: none;
-    font-size: 18px;
-    margin: 0 10px;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    backdrop-filter: blur(5px);
-}
-.button:hover { background: rgba(255,255,255,0.2); }
-
-#measureText {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    padding: 8px 12px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 8px;
-    font-size: 20px;
-}
-h2 { text-align: center; margin-top: 20px; }
-
-#historyList { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 10px; }
-
-#historyList div { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
-
-#historyList img { display: block; margin: 5px 0; max-width: 100%; height: auto; }
+body { font-family:"Segoe UI",sans-serif; background:#111; color:white; margin:0; }
+h1,h2 { text-align:center; margin:20px 0; }
+#container { position:relative; width:100vw; height:100vh; }
+#video { width:100%; height:100%; object-fit:cover; }
+#drawCanvas { position:absolute; top:0; left:0; width:100%; height:100%; touch-action:none; }
+#ui-panel { position:absolute; bottom:15px; width:100%; text-align:center; }
+.button { padding:12px 20px; border-radius:10px; border:none; font-size:18px; margin:0 10px; background:rgba(0,0,0,0.5); color:white; backdrop-filter:blur(5px);}
+.button:hover{ background:rgba(255,255,255,0.2);}
+#measureText { position:absolute; top:15px; left:15px; padding:8px 12px; background:rgba(0,0,0,0.4); border-radius:8px; font-size:20px; }
+#tapText { position:absolute; top:50px; left:15px; padding:5px 10px; background:rgba(0,0,0,0.4); border-radius:8px; font-size:16px; }
+table { width:95%; margin:20px auto; border-collapse:collapse;}
+th,td { border:1px solid #555; padding:8px; text-align:center;}
+img { cursor:pointer; max-width:100%; height:auto;}
