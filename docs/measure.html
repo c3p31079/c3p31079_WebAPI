@@ -3,20 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>長さ計測</title>
+<title>長さ計測（WebXR 3D）</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="container">
-    <video id="video" autoplay playsinline></video>
-    <canvas id="drawCanvas"></canvas>
+    <canvas id="xrCanvas"></canvas>
     <div id="measureText">0.0 cm</div>
     <div id="tapText">2回タップして平面補正</div>
-    <div id="ui-panel">
-        <button id="resetBtn" class="button">やり直し</button>
-        <button id="confirmBtn" class="button">保存</button>
-    </div>
+    <button id="saveBtn" class="button save">保存</button>
 </div>
-<script src="app.js"></script>
+<script type="module" src="xr3d_app.js"></script>
 </body>
 </html>
