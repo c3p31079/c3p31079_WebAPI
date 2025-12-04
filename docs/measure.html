@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>長さ計測（WebXR 3D）</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>計測（WebXR）</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div id="container">
+  <div id="container">
     <canvas id="xrCanvas"></canvas>
+
     <div id="measureText">0.0 cm</div>
-    <div id="tapText">2回タップして平面補正</div>
+    <div id="tapText">最初に2回タップして平面補正してください</div>
+
     <button id="saveBtn" class="button save">保存</button>
-</div>
-<script type="module" src="xr3d_app.js"></script>
+    <button id="resetBtn" class="button reset">やり直し</button>
+  </div>
+
+  <script type="module" src="xr3d_app.js"></script>
 </body>
 </html>

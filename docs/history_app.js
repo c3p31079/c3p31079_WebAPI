@@ -1,42 +1,36 @@
-const tableBody = document.querySelector("#historyTable tbody");
+// history_app.js
+const tbody = document.querySelector("#historyTable tbody");
+const clearAllBtn = document.getElementById("clearAll");
 
 function loadHistory(){
-    const history = JSON.parse(localStorage.getItem("measureHistory") || "[]");
-    tableBody.innerHTML = "";
+  const items = JSON.parse(localStorage.getItem("measureHistory") || "[]");
+  tbody.innerHTML = "";
+  items.forEach((it, idx)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${it.time}</td>
+      <td style="min-width:120px">${it.length_cm}</td>
+      <td><img src="${it.overlay}" alt="overlay" onclick="window.open('${it.overlay}')"></td>
+      <td><button data-idx="${idx}" class="button del">削除</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
 
-    history.forEach((item, idx)=>{
-        const tr = document.createElement("tr");
-
-        const tdTime = document.createElement("td");
-        tdTime.textContent = item.time;
-        tr.appendChild(tdTime);
-
-        const tdLength = document.createElement("td");
-        tdLength.textContent = item.length_cm + " cm";
-        tr.appendChild(tdLength);
-
-        const tdImg = document.createElement("td");
-        const img = document.createElement("img");
-        img.src = item.overlay;
-        img.style.width = "100px";
-        img.style.cursor = "pointer";
-        img.onclick = ()=> window.open(item.overlay);
-        tdImg.appendChild(img);
-        tr.appendChild(tdImg);
-
-        const tdDel = document.createElement("td");
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "削除";
-        delBtn.onclick = ()=>{
-            history.splice(idx,1);
-            localStorage.setItem("measureHistory",JSON.stringify(history));
-            loadHistory();
-        };
-        tdDel.appendChild(delBtn);
-        tr.appendChild(tdDel);
-
-        tableBody.appendChild(tr);
+  document.querySelectorAll(".del").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      const idx = Number(e.currentTarget.dataset.idx);
+      const arr = JSON.parse(localStorage.getItem("measureHistory") || "[]");
+      arr.splice(idx,1);
+      localStorage.setItem("measureHistory", JSON.stringify(arr));
+      loadHistory();
     });
+  });
 }
+
+clearAllBtn?.addEventListener("click", ()=>{
+  if(!confirm("履歴を全て削除しますか？")) return;
+  localStorage.removeItem("measureHistory");
+  loadHistory();
+});
 
 loadHistory();

@@ -1,9 +1,29 @@
-body { margin:0; font-family:"Segoe UI",sans-serif; background:#111; color:white; }
-h1 { text-align:center; margin:20px 0; }
-#history-container { padding:10px; }
-table { width:100%; border-collapse: collapse; margin-bottom:20px; }
-th, td { border:1px solid #555; padding:8px; text-align:center; }
-th { background:#222; }
-td img { border:1px solid #555; border-radius:4px; }
-.button { padding:10px 15px; font-size:16px; border:none; border-radius:8px; background:rgba(0,0,0,0.5); color:white; cursor:pointer; }
-.button:hover { background:rgba(255,255,255,0.2); }
+/* 全体 */
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:#111;color:#fff}
+h1{ text-align:center;margin:18px 0}
+
+/* トップ */
+#top{display:flex;flex-direction:column;align-items:center;justify-content:center;height:80vh}
+.controls{display:flex;gap:12px}
+
+/* ボタン */
+.big{padding:14px 20px;font-size:18px;border-radius:10px;border:none;background:#0b84ff;color:#fff;cursor:pointer}
+.button{padding:10px 14px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;cursor:pointer}
+.button:hover{background:rgba(255,255,255,0.08)}
+
+/* 計測画面 */
+#container{position:relative;width:100vw;height:100vh;overflow:hidden}
+#xrCanvas{position:absolute;left:0;top:0;width:100%;height:100%;touch-action:none}
+#measureText{position:absolute;left:14px;top:14px;padding:8px 10px;background:rgba(0,0,0,0.4);border-radius:8px}
+#tapText{position:absolute;left:14px;top:54px;padding:6px 8px;background:rgba(0,0,0,0.35);border-radius:8px}
+
+/* 保存/やり直し：右下に重ならないように */
+.button.save{position:absolute;right:14px;bottom:14px}
+.button.reset{position:absolute;right:14px;bottom:70px}
+
+/* 履歴 */
+#history-container{padding:12px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #333;padding:8px;text-align:center}
+td img{max-width:120px;cursor:pointer;border-radius:6px;border:1px solid #333}
+#clearAll{background:#c9302c}

@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>計測履歴</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div id="history-container">
+  <div id="history-container">
     <h1>計測履歴</h1>
     <table id="historyTable">
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>長さ</th>
-                <th>画像</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
+      <thead>
+        <tr><th>日付</th><th>長さ (cm)</th><th>サムネイル</th><th>操作</th></tr>
+      </thead>
+      <tbody></tbody>
     </table>
-    <button onclick="location.href='index.html'" class="button">トップへ戻る</button>
-</div>
-<script type="module" src="history_app.js"></script>
+    <div style="text-align:center;margin:16px;">
+      <button onclick="location.href='index.html'" class="button">トップへ</button>
+      <button id="clearAll" class="button">全削除</button>
+    </div>
+  </div>
+
+  <script type="module" src="history_app.js"></script>
 </body>
 </html>
