@@ -1,88 +1,46 @@
 /* 全体 */
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:#111;color:#fff}
-h1{ text-align:center;margin:18px 0}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f0f2f5;
+  padding: 24px;
+}
 
-/* トップ */
-#top{display:flex;flex-direction:column;align-items:center;justify-content:center;height:80vh}
-.controls{display:flex;gap:12px}
+/* カード */
+.card {
+  background: #ffffff;
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* タイトル */
+h1 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+/* 測定値表示 */
+.value {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 24px 0;
+  color: #333;
+}
 
 /* ボタン */
-.big{padding:14px 20px;font-size:18px;border-radius:10px;border:none;background:#0b84ff;color:#fff;cursor:pointer}
-.button{padding:10px 14px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;cursor:pointer}
-.button:hover{background:rgba(255,255,255,0.08)}
-
-/* 計測画面 */
-#container{position:relative;width:100vw;height:100vh;overflow:hidden}
-#xrCanvas{position:absolute;left:0;top:0;width:100%;height:100%;touch-action:none}
-#measureText{position:absolute;left:14px;top:14px;padding:8px 10px;background:rgba(0,0,0,0.4);border-radius:8px}
-#tapText{position:absolute;left:14px;top:54px;padding:6px 8px;background:rgba(0,0,0,0.35);border-radius:8px}
-
-/* 保存/やり直し：右下に重ならないように */
-.button.save{position:absolute;right:14px;bottom:14px}
-.button.reset{position:absolute;right:14px;bottom:70px}
-
-/* 履歴 */
-#history-container{padding:12px}
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid #333;padding:8px;text-align:center}
-td img{max-width:120px;cursor:pointer;border-radius:6px;border:1px solid #333}
-#clearAll{background:#c9302c}
-
-body {
-    margin: 0;
-    overflow: hidden;
-    font-family: sans-serif;
-}
-
 button {
-    position: fixed;
-    top: 10px;
-    padding: 10px 16px;
-    z-index: 999;
-    font-size: 14px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-#backBtn { left: 10px; }
-#resetBtn { left: 90px; }
-#saveBtn { right: 10px; }
-
-#info {
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-size: 20px;
-    text-shadow: 0 0 5px black;
-}
-
-body {
-  font-family: sans-serif;
-  padding: 20px;
-}
-
-button {
-  margin: 10px 5px;
-  padding: 12px 16px;
-  font-size: 14px;
-}
-
-.menu button {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  margin: 10px auto;
-}
-
-.sub {
-  background: #eee;
-}
-
-ul li {
-  margin: 8px 0;
-}
-
-#guide {
-  margin-top: 15px;
-  color: #c00;
+button:hover {
+  background: #005fcc;
 }
