@@ -4,6 +4,7 @@ import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
+from flask import send_from_directory
 
 app = Flask(__name__)
 CORS(app)
@@ -48,6 +49,10 @@ def history():
             items.append(data)
     items.sort(key=lambda x: x["time"], reverse=True)
     return jsonify(items)
+
+@app.route("/uploads/<path:filename>")
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_DIR, filename)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
