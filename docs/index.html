@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AR 実物大計測</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>AR 長さ計測</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="top">
-    <h1>AR 実物大計測</h1>
-    <div class="controls">
-      <button onclick="location.href='measure.html'" class="big">計測開始</button>
-      <button onclick="location.href='history.html'" class="big">履歴を見る</button>
-    </div>
-  </div>
+
+<h1>AR 長さ計測ツール</h1>
+
+<div class="menu">
+  <button onclick="location.href='measure.html'">
+    AR計測を開始
+  </button>
+
+  <!-- WebXRの追加 -->
+  <button class="sub" onclick="location.href='ar-check.html'">
+    AR動作チェック
+  </button>
+</div>
+
+<hr />
+
+<h2>計測履歴</h2>
+<div id="history">(ここに履歴)</div>
+
 </body>
 </html>

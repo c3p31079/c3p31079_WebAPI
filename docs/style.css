@@ -27,3 +27,62 @@ table{width:100%;border-collapse:collapse}
 th,td{border:1px solid #333;padding:8px;text-align:center}
 td img{max-width:120px;cursor:pointer;border-radius:6px;border:1px solid #333}
 #clearAll{background:#c9302c}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+button {
+    position: fixed;
+    top: 10px;
+    padding: 10px 16px;
+    z-index: 999;
+    font-size: 14px;
+}
+
+#backBtn { left: 10px; }
+#resetBtn { left: 90px; }
+#saveBtn { right: 10px; }
+
+#info {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    text-shadow: 0 0 5px black;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+button {
+  margin: 10px 5px;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px auto;
+}
+
+.sub {
+  background: #eee;
+}
+
+ul li {
+  margin: 8px 0;
+}
+
+#guide {
+  margin-top: 15px;
+  color: #c00;
+}
