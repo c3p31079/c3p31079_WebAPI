@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
@@ -7,6 +8,7 @@ from datetime import datetime
 UPLOAD_DIR = "uploads"
 HISTORY_DIR = "history"
 
+# フォルダがなければ作成
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
@@ -21,14 +23,13 @@ def home():
 def save():
     try:
         data = request.get_json()
-        image_data = data.get("image")  # base64 文字列
+        image_data = data.get("image")  # Base64形式の画像
         length = data.get("length")
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 
-        # 画像保存
+        # 画像を保存
         image_path = os.path.join(UPLOAD_DIR, f"{timestamp}.jpg")
         with open(image_path, "wb") as f:
-            import base64
             f.write(base64.b64decode(image_data))
 
         # 履歴 JSON 保存
