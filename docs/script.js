@@ -1,11 +1,31 @@
-fetch("https://c3p31079-webapi.onrender.com/history")
-.then(res => res.json())
-.then(data => {
-    const table = document.getElementById("historyTable");
-    data.forEach(item => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${item.time}</td><td>${item.length_cm.toFixed(2)}</td><td><img src="${item.image}" onclick="window.open('${item.image}','_blank')"/></td>`;
-        table.appendChild(tr);
-    });
-})
-.catch(err => alert("データ取得エラー: " + err));
+const historyBody = document.getElementById("history-body");
+
+async function loadHistory() {
+    try {
+        const res = await fetch("https://c3p31079-webapi.onrender.com/history");
+        const data = await res.json();
+        historyBody.innerHTML = "";
+        data.forEach(item => {
+            const tr = document.createElement("tr");
+            const dateTd = document.createElement("td");
+            dateTd.textContent = item.time;
+            const lengthTd = document.createElement("td");
+            lengthTd.textContent = item.length_cm;
+            const imgTd = document.createElement("td");
+            const img = document.createElement("img");
+            img.src = `https://c3p31079-webapi.onrender.com/${item.image}`;
+            img.onclick = () => window.open(img.src, "_blank");
+            imgTd.appendChild(img);
+
+            tr.appendChild(dateTd);
+            tr.appendChild(lengthTd);
+            tr.appendChild(imgTd);
+            historyBody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error(e);
+        historyBody.innerHTML = "<tr><td colspan='3'>データ取得エラー</td></tr>";
+    }
+}
+
+loadHistory();
