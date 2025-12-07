@@ -1,27 +1,88 @@
-// BACKEND_BASE を自分のサーバに変更
-const BACKEND_BASE = "https://YOUR_BACKEND_DOMAIN_OR_IP:5000";
+// 計測履歴をWeb APIから取得して表示
+const API_BASE = "https://c3p31079-webapi.onrender.com";
 
-async function load() {
-  const r = await fetch(BACKEND_BASE + "/api/history");
-  const data = await r.json();
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-  data.forEach(item => {
-    const el = document.createElement("div");
-    el.className = "card";
-    el.innerHTML = `
-      <div><strong>${new Date(item.time * 1000).toLocaleString()}</strong></div>
-      <div>長さ: ${item.length_cm ?? "N/A"} cm</div>
-      <div>
-        <a href="${BACKEND_BASE}${item.raw_url}" target="_blank">
-          <img src="${BACKEND_BASE}${item.overlay_url}" alt="overlay"/>
-        </a>
-      </div>
-    `;
-    list.appendChild(el);
-  });
+// ページ読み込み時に実行
+window.addEventListener("DOMContentLoaded", () => {
+  loadHistory();
+});
+
+// 履歴取得
+function loadHistory() {
+  fetch(`${API_BASE}/api/history`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("履歴取得に失敗しました");
+      }
+      return response.json();
+    })
+    .then(data => {
+      renderTable(data);
+    })
+    .catch(error => {
+      console.error(error);
+      alert("データ取得エラー");
+    });
 }
 
-load().catch(e => {
-  document.getElementById("list").innerText = "履歴取得エラー: " + e.message;
-});
+// 表を描画
+function renderTable(items) {
+  const table = document.getElementById("history-table");
+
+  // 既存の行を削除（再読み込み対応）
+  table.innerHTML = `
+    <tr>
+      <th>日時</th>
+      <th>長さ (cm)</th>
+      <th>画像</th>
+    </tr>
+  `;
+
+  // 新しい順に表示
+  items
+    .sort((a, b) => new Date(b.time) - new Date(a.time))
+    .forEach(item => {
+      const row = table.insertRow();
+
+      // 日時
+      const timeCell = row.insertCell();
+      timeCell.textContent = item.time;
+
+      // 長さ
+      const lengthCell = row.insertCell();
+      lengthCell.textContent = Number(item.length_cm).toFixed(2);
+
+      // 画像
+      const imageCell = row.insertCell();
+      const img = document.createElement("img");
+
+      // Render側で static として配信している想定
+      img.src = `${API_BASE}/${item.image}`;
+      img.alt = "計測画像";
+      img.className = "thumbnail";
+
+      // クリックで拡大
+      img.addEventListener("click", () => {
+        openImageViewer(img.src);
+      });
+
+      imageCell.appendChild(img);
+    });
+}
+
+// 画像拡大ビュー
+function openImageViewer(src) {
+  const overlay = document.createElement("div");
+  overlay.className = "image-overlay";
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.className = "image-full";
+
+  overlay.appendChild(img);
+
+  overlay.addEventListener("click", () => {
+    document.body.removeChild(overlay);
+  });
+
+  document.body.appendChild(overlay);
+}

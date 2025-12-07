@@ -1,23 +1,45 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+import base64, os, json, uuid
 
-app = Flask(__name__)
-CORS(app)
+app = Flask(__name__, static_url_path="", static_folder="")
 
-latest_length = None
 
-@app.route("/api/length", methods=["POST"])
-def receive_length():
-    global latest_length
+DATA_DIR = "data"
+IMAGE_DIR = "images"
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(IMAGE_DIR, exist_ok=True)
+
+@app.route("/api/measure", methods=["POST"])
+def receive_measure():
     data = request.json
-    latest_length = data.get("length_cm")
+    uid = str(uuid.uuid4())
+
+    image_data = base64.b64decode(data["image"])
+    img_path = f"{IMAGE_DIR}/{uid}.jpg"
+
+    with open(img_path, "wb") as f:
+        f.write(image_data)
+
+    record = {
+        "id": uid,
+        "time": data["time"],
+        "length_cm": data["length_cm"],
+        "image": img_path
+    }
+
+    with open(f"{DATA_DIR}/{uid}.json", "w") as f:
+        json.dump(record, f)
+
     return jsonify({"status": "ok"})
 
-@app.route("/api/latest", methods=["GET"])
-def latest():
-    return jsonify({
-        "length_cm": latest_length if latest_length else 0
-    })
+@app.route("/api/history")
+def history():
+    items = []
+    for f in os.listdir(DATA_DIR):
+        with open(os.path.join(DATA_DIR, f)) as fp:
+            items.append(json.load(fp))
+    return jsonify(items)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+@app.route("/images/<path:filename>")
+def images(filename):
+    return send_from_directory("images", filename)

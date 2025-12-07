@@ -2,37 +2,15 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>AR測定結果ビューア</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS読み込み -->
+  <title>AR計測履歴</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="card">
-    <h1>AR測定結果</h1>
+<h1>AR計測履歴</h1>
 
-    <div id="value" class="value">
-      未取得
-    </div>
+<table id="history-table"></table>
 
-    <button onclick="loadResult()">更新</button>
-  </div>
-
-<script>
-async function loadResult() {
-  try {
-    const response = await fetch("https://YOUR_BACKEND_DOMAIN/api/latest");
-    const data = await response.json();
-
-    document.getElementById("value").innerText =
-      data.length_cm.toFixed(1) + " cm";
-  } catch (e) {
-    document.getElementById("value").innerText = "取得エラー";
-  }
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
