@@ -1,31 +1,55 @@
-const historyBody = document.getElementById("history-body");
+// Render の Flask API URL
+const API_BASE = "https://c3p31079-webapi.onrender.com";
 
-async function loadHistory() {
-    try {
-        const res = await fetch("https://c3p31079-webapi.onrender.com/history");
-        const data = await res.json();
-        historyBody.innerHTML = "";
-        data.forEach(item => {
-            const tr = document.createElement("tr");
-            const dateTd = document.createElement("td");
-            dateTd.textContent = item.time;
-            const lengthTd = document.createElement("td");
-            lengthTd.textContent = item.length_cm;
-            const imgTd = document.createElement("td");
-            const img = document.createElement("img");
-            img.src = `https://c3p31079-webapi.onrender.com/${item.image}`;
-            img.onclick = () => window.open(img.src, "_blank");
-            imgTd.appendChild(img);
+async function fetchHistory() {
+  const statusDiv = document.getElementById("status");
+  statusDiv.textContent = "読み込み中…";
 
-            tr.appendChild(dateTd);
-            tr.appendChild(lengthTd);
-            tr.appendChild(imgTd);
-            historyBody.appendChild(tr);
-        });
-    } catch (e) {
-        console.error(e);
-        historyBody.innerHTML = "<tr><td colspan='3'>データ取得エラー</td></tr>";
+  try {
+    const response = await fetch(`${API_BASE}/api/history`);
+    if (!response.ok) throw new Error("レスポンスエラー");
+    const data = await response.json();
+
+    const tbody = document.getElementById("historyTable");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='3'>履歴なし</td></tr>";
+    } else {
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+
+        // 日付
+        const dateTd = document.createElement("td");
+        const dt = new Date(item.time);
+        dateTd.textContent = dt.toLocaleString();
+        tr.appendChild(dateTd);
+
+        // 長さ
+        const lenTd = document.createElement("td");
+        lenTd.textContent = item.length.toFixed(2);
+        tr.appendChild(lenTd);
+
+        // 画像
+        const imgTd = document.createElement("td");
+        const img = document.createElement("img");
+        img.src = `${API_BASE}/uploads/${item.image.split("/").pop()}`;
+        img.alt = "線なし画像";
+        img.onclick = () => window.open(img.src, "_blank");
+        imgTd.appendChild(img);
+        tr.appendChild(imgTd);
+
+        tbody.appendChild(tr);
+      });
     }
+
+    statusDiv.textContent = "";
+  } catch (err) {
+    console.error(err);
+    statusDiv.textContent = "データ取得エラー";
+    statusDiv.style.color = "red";
+  }
 }
 
-loadHistory();
+// ページ読み込み時に履歴を取得
+window.addEventListener("DOMContentLoaded", fetchHistory);
