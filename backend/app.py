@@ -1,83 +1,68 @@
 import os
-import io
 import json
-from datetime import datetime
+import base64
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
+from datetime import datetime
 
-# 設定
+app = Flask(__name__)
+CORS(app)
+
 UPLOAD_DIR = "uploads"
 HISTORY_DIR = "history"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
-app = Flask(__name__)
-CORS(app)
-
-# ホーム
-@app.route("/")
-def home():
-    return "Backend running"
-
-# 画像と測定情報の保存
+# 画像・データ保存
 @app.route("/api/save", methods=["POST"])
 def save():
     try:
-        # JSONデータを取得
-        data = request.get_json()
+        data = request.json
+        if not data or "image" not in data or "length" not in data:
+            return jsonify({"status": "error", "message": "image または length がありません"}), 400
 
-        if not data:
-            return jsonify({"status": "error", "message": "データがありません"}), 400
+        # base64デコード
+        img_data = base64.b64decode(data["image"].split(",")[1] if "," in data["image"] else data["image"])
 
-        # 画像データ（base64）
-        image_data = data.get("image")
-        length = data.get("length")
-
-        if not image_data or length is None:
-            return jsonify({"status": "error", "message": "画像または長さがありません"}), 400
-
-        # ファイル名生成
+        # タイムスタンプ
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        image_filename = f"{timestamp}.jpg"
-        image_path = os.path.join(UPLOAD_DIR, image_filename)
+        img_filename = f"{timestamp}.jpg"
+        img_path = os.path.join(UPLOAD_DIR, img_filename)
 
-        # base64 → バイナリで保存
-        import base64
-        image_bytes = base64.b64decode(image_data.split(",")[1])
-        with open(image_path, "wb") as f:
-            f.write(image_bytes)
+        # 画像保存
+        with open(img_path, "wb") as f:
+            f.write(img_data)
 
-        # 履歴 JSON 保存
-        history_data = {
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "length": length,
-            "image": image_filename
+        # 履歴情報
+        record = {
+            "image": img_filename,
+            "length": data["length"],
+            "time": data.get("time", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+            "image_url": f"/uploads/{img_filename}"  # Webでアクセス可能
         }
-        history_filename = f"{timestamp}.json"
-        history_path = os.path.join(HISTORY_DIR, history_filename)
-        with open(history_path, "w", encoding="utf-8") as f:
-            json.dump(history_data, f, ensure_ascii=False, indent=2)
+
+        # JSON履歴保存
+        json_filename = os.path.join(HISTORY_DIR, f"{timestamp}.json")
+        with open(json_filename, "w", encoding="utf-8") as f:
+            json.dump(record, f, ensure_ascii=False, indent=2)
 
         return jsonify({"status": "success", "message": "保存しました"})
 
     except Exception as e:
-        print("保存エラー:", e)
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# 測定履歴一覧
+# 測定履歴一覧取得
 @app.route("/api/history")
 def history():
     items = []
     for f in os.listdir(HISTORY_DIR):
         if f.endswith(".json"):
-            data = json.load(open(os.path.join(HISTORY_DIR, f), encoding="utf-8"))
-            # 画像URLをWebでアクセス可能にする
+            with open(os.path.join(HISTORY_DIR, f), "r", encoding="utf-8") as jf:
+                data = json.load(jf)
+            # 画像URLを補正（Webでアクセス可能）
             data["image_url"] = f"/uploads/{data['image']}"
             items.append(data)
-
-    # 新しい順にソート
     items.sort(key=lambda x: x["time"], reverse=True)
     return jsonify(items)
 
