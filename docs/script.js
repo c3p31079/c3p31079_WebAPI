@@ -1,48 +1,48 @@
-const historyList = document.getElementById("historyList");
-const messageDiv = document.getElementById("message");
+const API_URL = "https://c3p31079-webapi.onrender.com";
 
 async function fetchHistory() {
+    const statusDiv = document.getElementById("status");
+    statusDiv.textContent = "読み込み中...";
+
     try {
-        const res = await fetch("https://c3p31079-webapi.onrender.com/api/history");
-        if (!res.ok) throw new Error("データ取得失敗");
-
+        const res = await fetch(`${API_URL}/api/history`);
+        if (!res.ok) throw new Error("通信エラー");
         const data = await res.json();
-        historyList.innerHTML = "";
 
-        if (data.length === 0) {
-            messageDiv.textContent = "測定履歴がありません";
-            return;
-        } else {
-            messageDiv.textContent = "";
-        }
+        const tbody = document.querySelector("#historyTable tbody");
+        tbody.innerHTML = "";
 
         data.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "history-item";
+            const tr = document.createElement("tr");
 
+            // 日付
+            const tdTime = document.createElement("td");
+            tdTime.textContent = item.time;
+            tr.appendChild(tdTime);
+
+            // 長さ
+            const tdLength = document.createElement("td");
+            tdLength.textContent = item.length;
+            tr.appendChild(tdLength);
+
+            // 画像
+            const tdImg = document.createElement("td");
             const img = document.createElement("img");
-            img.src = "https://c3p31079-webapi.onrender.com/" + item.image.replace(/\\/g, "/");
+            img.src = `${API_URL}${item.image_url}`;
             img.alt = "測定画像";
+            img.onclick = () => window.open(img.src, "_blank");
+            tdImg.appendChild(img);
+            tr.appendChild(tdImg);
 
-            const length = document.createElement("div");
-            length.className = "length";
-            length.textContent = `長さ: ${item.length.toFixed(2)} cm`;
-
-            const time = document.createElement("div");
-            time.className = "time";
-            time.textContent = `日時: ${item.time}`;
-
-            div.appendChild(img);
-            div.appendChild(length);
-            div.appendChild(time);
-
-            historyList.appendChild(div);
+            tbody.appendChild(tr);
         });
 
-    } catch (err) {
-        messageDiv.textContent = "データ取得エラー: " + err.message;
-        console.error(err);
+        statusDiv.textContent = `全 ${data.length} 件`;
+    } catch (e) {
+        console.error(e);
+        statusDiv.textContent = `データ取得エラー: ${e.message}`;
     }
 }
 
+// 初回読み込み
 fetchHistory();
