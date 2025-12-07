@@ -5,53 +5,46 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 
-UPLOAD_DIR = "uploads"
-HISTORY_DIR = "history"
-
-# フォルダがなければ作成
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(HISTORY_DIR, exist_ok=True)
-
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
-def home():
-    return "Backend running"
+UPLOAD_DIR = "uploads"
+HISTORY_DIR = "history"
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(HISTORY_DIR, exist_ok=True)
 
 @app.route("/api/save", methods=["POST"])
 def save():
     try:
-        data = request.get_json()
-        image_data = data.get("image")  # Base64形式の画像
-        length = data.get("length")
+        data = request.json
+        img_data = base64.b64decode(data["image"])
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        img_filename = os.path.join(UPLOAD_DIR, f"{timestamp}.jpg")
+        with open(img_filename, "wb") as f:
+            f.write(img_data)
 
-        # 画像を保存
-        image_path = os.path.join(UPLOAD_DIR, f"{timestamp}.jpg")
-        with open(image_path, "wb") as f:
-            f.write(base64.b64decode(image_data))
-
-        # 履歴 JSON 保存
-        history = {
-            "time": timestamp,
-            "length": length,
-            "image": image_path
+        record = {
+            "image": img_filename,
+            "length": data["length"],
+            "time": data["time"]
         }
-        history_path = os.path.join(HISTORY_DIR, f"{timestamp}.json")
-        with open(history_path, "w") as f:
-            json.dump(history, f)
 
-        return jsonify({"status": "success", "message": "保存しました"})
+        json_filename = os.path.join(HISTORY_DIR, f"{timestamp}.json")
+        with open(json_filename, "w") as f:
+            json.dump(record, f)
+
+        return jsonify({"status": "success"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route("/api/history", methods=["GET"])
+@app.route("/api/history")
 def history():
     items = []
     for f in os.listdir(HISTORY_DIR):
         if f.endswith(".json"):
-            data = json.load(open(os.path.join(HISTORY_DIR, f)))
+            with open(os.path.join(HISTORY_DIR, f), "r") as jf:
+                data = json.load(jf)
             items.append(data)
     items.sort(key=lambda x: x["time"], reverse=True)
     return jsonify(items)
